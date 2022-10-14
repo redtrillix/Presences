@@ -1,15 +1,16 @@
 import "source-map-support/register";
 
-import { existsSync as exists } from "node:fs";
 import axios from "axios";
 import { sync as glob } from "glob";
-import { isValidJSON, readFile, writeJson, type Metadata } from "./util";
+import { existsSync as exists } from "node:fs";
+
+import { isValidJSON, type Metadata, readFile, writeJson } from "./util";
 
 const missingMetadata: string[] = glob("./{websites,programs}/*/*/").filter(
-		pF => !exists(`${pF}/dist/metadata.json`)
+		pF => !exists(`${pF}/metadata.json`)
 	),
 	allmeta: [Metadata, string][] = glob(
-		"./{websites,programs}/*/*/*/metadata.json"
+		"./{websites,programs}/*/*/metadata.json"
 	).reduce((result, pF) => {
 		const file = readFile(pF);
 		if (isValidJSON(file)) result.push([JSON.parse(file), pF]);
